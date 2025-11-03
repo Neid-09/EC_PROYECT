@@ -247,125 +247,468 @@ entre su temperatura y la temperatura del medio ambiente.
 
 def opcion_calcular_temperatura():
     """Maneja la opción 1: Calcular temperatura en un tiempo específico."""
-    print("\n" + "="*60)
-    print("    OPCIÓN 1: CALCULAR TEMPERATURA")
-    print("="*60)
+    # Variables para almacenar datos calculados
+    Tm = None
+    C = None
+    K = None
+    ultima_temperatura = None
+    ultimo_tiempo = None
     
-    print("\n📝 Ingrese los datos:\n")
-    Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
-    C = solicitar_numero("  Constante C: ")
-    K = solicitar_numero("  Constante K (negativa para enfriamiento): ")
-    t = solicitar_numero("  Tiempo transcurrido t (minutos): ", valor_minimo=0)
-    
-    temperatura = calcular_temperatura(Tm, C, K, t)
-    
-    print("\n" + "-"*60)
-    print("📊 RESULTADO:")
-    print(f"   Temperatura después de {t} minutos: {temperatura:.2f}°C")
-    print(f"   Fórmula usada: T = {Tm} + {C} * e^({K}*{t})")
-    print("-"*60)
-    
-    input("\nPresione ENTER para continuar...")
+    while True:
+        print("\n" + "="*60)
+        print("    OPCIÓN 1: CALCULAR TEMPERATURA")
+        print("="*60)
+        
+        # Mostrar datos actuales si existen
+        if Tm is not None:
+            print("\n📌 DATOS ACTUALES:")
+            print(f"   Tm = {Tm}°C | C = {C} | K = {K}")
+            if ultima_temperatura is not None:
+                print(f"   Último cálculo: T({ultimo_tiempo} min) = {ultima_temperatura:.2f}°C")
+        
+        print("\n📋 SUBMENÚ:")
+        print("  a) Ingresar nuevos datos y calcular")
+        print("  b) Calcular temperatura en otro tiempo (usar datos actuales)")
+        print("  c) Generar tabla con datos actuales")
+        print("  d) Regresar al menú principal")
+        
+        sub_opcion = input("\n👉 Seleccione una opción (a-d): ").strip().lower()
+        
+        if sub_opcion == "a":
+            print("\n📝 Ingrese los datos:\n")
+            Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
+            C = solicitar_numero("  Constante C: ")
+            K = solicitar_numero("  Constante K (negativa para enfriamiento): ")
+            ultimo_tiempo = solicitar_numero("  Tiempo transcurrido t (minutos): ", valor_minimo=0)
+            
+            ultima_temperatura = calcular_temperatura(Tm, C, K, ultimo_tiempo)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            print(f"   Temperatura después de {ultimo_tiempo} minutos: {ultima_temperatura:.2f}°C")
+            print(f"   Fórmula usada: T = {Tm} + {C} * e^({K}*{ultimo_tiempo})")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "b":
+            if Tm is None:
+                print("\n❌ Primero debe ingresar datos (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C}, K={K}")
+            ultimo_tiempo = solicitar_numero("  Tiempo transcurrido t (minutos): ", valor_minimo=0)
+            
+            ultima_temperatura = calcular_temperatura(Tm, C, K, ultimo_tiempo)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            print(f"   Temperatura después de {ultimo_tiempo} minutos: {ultima_temperatura:.2f}°C")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "c":
+            if Tm is None:
+                print("\n❌ Primero debe ingresar datos (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C}, K={K}")
+            tiempo_total = solicitar_numero("  Tiempo total a simular (minutos): ", valor_minimo=0)
+            intervalo = solicitar_numero("  Intervalo entre mediciones (minutos): ", valor_minimo=0.1)
+            
+            tabla = generar_tabla_enfriamiento(Tm, C, K, tiempo_total, intervalo)
+            
+            print("\n" + "="*60)
+            print(f"📊 TABLA - T = {Tm} + {C} * e^({K}*t)")
+            print("="*60)
+            print(f"{'Tiempo (min)':>15} | {'Temperatura (°C)':>20}")
+            print("-"*60)
+            
+            for tiempo, temperatura in tabla:
+                print(f"{tiempo:>15.2f} | {temperatura:>20.2f}")
+            
+            print("="*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "d":
+            break
+        else:
+            print("\n❌ Opción inválida. Seleccione a, b, c o d.")
+            input("Presione ENTER para continuar...")
 
 
 def opcion_calcular_tiempo():
     """Maneja la opción 2: Calcular tiempo para alcanzar temperatura objetivo."""
-    print("\n" + "="*60)
-    print("    OPCIÓN 2: CALCULAR TIEMPO")
-    print("="*60)
+    # Variables para almacenar datos calculados
+    Tm = None
+    C = None
+    K = None
+    ultimo_tiempo = None
+    ultima_temp_objetivo = None
     
-    print("\n📝 Ingrese los datos:\n")
-    Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
-    C = solicitar_numero("  Constante C: ")
-    K = solicitar_numero("  Constante K: ")
-    T_objetivo = solicitar_numero("  Temperatura objetivo (°C): ")
-    
-    tiempo = calcular_tiempo_para_temperatura(Tm, C, K, T_objetivo)
-    
-    print("\n" + "-"*60)
-    print("📊 RESULTADO:")
-    if tiempo is None:
-        print("   ❌ No es posible alcanzar esa temperatura con estos parámetros.")
-    elif tiempo == float('inf'):
-        print("   ⚠️  El objeto nunca alcanzará exactamente esa temperatura.")
-    else:
-        print(f"   Tiempo necesario: {tiempo:.2f} minutos ({tiempo/60:.2f} horas)")
-    print("-"*60)
-    
-    input("\nPresione ENTER para continuar...")
+    while True:
+        print("\n" + "="*60)
+        print("    OPCIÓN 2: CALCULAR TIEMPO")
+        print("="*60)
+        
+        # Mostrar datos actuales si existen
+        if Tm is not None:
+            print("\n� DATOS ACTUALES:")
+            print(f"   Tm = {Tm}°C | C = {C} | K = {K}")
+            if ultimo_tiempo is not None:
+                print(f"   Último cálculo: t = {ultimo_tiempo:.2f} min para alcanzar {ultima_temp_objetivo}°C")
+        
+        print("\n📋 SUBMENÚ:")
+        print("  a) Ingresar nuevos datos y calcular")
+        print("  b) Calcular tiempo para otra temperatura (usar datos actuales)")
+        print("  c) Calcular temperatura en un tiempo específico")
+        print("  d) Generar tabla con datos actuales")
+        print("  e) Regresar al menú principal")
+        
+        sub_opcion = input("\n👉 Seleccione una opción (a-e): ").strip().lower()
+        
+        if sub_opcion == "a":
+            print("\n�📝 Ingrese los datos:\n")
+            Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
+            C = solicitar_numero("  Constante C: ")
+            K = solicitar_numero("  Constante K: ")
+            ultima_temp_objetivo = solicitar_numero("  Temperatura objetivo (°C): ")
+            
+            ultimo_tiempo = calcular_tiempo_para_temperatura(Tm, C, K, ultima_temp_objetivo)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            if ultimo_tiempo is None:
+                print("   ❌ No es posible alcanzar esa temperatura con estos parámetros.")
+            elif ultimo_tiempo == float('inf'):
+                print("   ⚠️  El objeto nunca alcanzará exactamente esa temperatura.")
+            else:
+                print(f"   Tiempo necesario: {ultimo_tiempo:.2f} minutos ({ultimo_tiempo/60:.2f} horas)")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "b":
+            if Tm is None:
+                print("\n❌ Primero debe ingresar datos (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C}, K={K}")
+            ultima_temp_objetivo = solicitar_numero("  Temperatura objetivo (°C): ")
+            
+            ultimo_tiempo = calcular_tiempo_para_temperatura(Tm, C, K, ultima_temp_objetivo)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            if ultimo_tiempo is None:
+                print("   ❌ No es posible alcanzar esa temperatura con estos parámetros.")
+            elif ultimo_tiempo == float('inf'):
+                print("   ⚠️  El objeto nunca alcanzará exactamente esa temperatura.")
+            else:
+                print(f"   Tiempo necesario: {ultimo_tiempo:.2f} minutos ({ultimo_tiempo/60:.2f} horas)")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "c":
+            if Tm is None:
+                print("\n❌ Primero debe ingresar datos (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C}, K={K}")
+            t = solicitar_numero("  Tiempo t (minutos): ", valor_minimo=0)
+            
+            temperatura = calcular_temperatura(Tm, C, K, t)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            print(f"   Temperatura después de {t} minutos: {temperatura:.2f}°C")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "d":
+            if Tm is None:
+                print("\n❌ Primero debe ingresar datos (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C}, K={K}")
+            tiempo_total = solicitar_numero("  Tiempo total a simular (minutos): ", valor_minimo=0)
+            intervalo = solicitar_numero("  Intervalo entre mediciones (minutos): ", valor_minimo=0.1)
+            
+            tabla = generar_tabla_enfriamiento(Tm, C, K, tiempo_total, intervalo)
+            
+            print("\n" + "="*60)
+            print(f"📊 TABLA - T = {Tm} + {C} * e^({K}*t)")
+            print("="*60)
+            print(f"{'Tiempo (min)':>15} | {'Temperatura (°C)':>20}")
+            print("-"*60)
+            
+            for tiempo, temperatura in tabla:
+                print(f"{tiempo:>15.2f} | {temperatura:>20.2f}")
+            
+            print("="*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "e":
+            break
+        else:
+            print("\n❌ Opción inválida. Seleccione a, b, c, d o e.")
+            input("Presione ENTER para continuar...")
 
 
 def opcion_calcular_constante_K():
     """Maneja la opción 3: Calcular constante K con datos conocidos."""
-    print("\n" + "="*60)
-    print("    OPCIÓN 3: CALCULAR CONSTANTE K")
-    print("="*60)
-    print("\n💡 Esta opción calcula K cuando conoces:")
-    print("   • Temperatura inicial T(0)")
-    print("   • Temperatura ambiente Tm")
-    print("   • Temperatura en un tiempo específico T(t)")
-    print("   • El tiempo t en que se midió")
+    # Variables para almacenar datos calculados
+    T0 = None
+    Tm = None
+    K = None
+    C = None
     
-    print("\n📝 Ingrese los datos:\n")
-    T0 = solicitar_numero("  Temperatura inicial T(0) (°C): ")
-    Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
-    T_en_t = solicitar_numero("  Temperatura en tiempo t (°C): ")
-    t = solicitar_numero("  Tiempo t en que se midió (minutos): ", valor_minimo=0.0001)
-    
-    K, C = calcular_constante_K(T0, Tm, T_en_t, t)
-    
-    print("\n" + "-"*60)
-    print("📊 RESULTADO:")
-    if K is None:
-        print("   ❌ No es posible calcular K con estos datos.")
-        print("   Verifica que los datos sean consistentes.")
-    else:
-        print(f"   Constante K = {K:.6f} (1/min)")
-        print(f"   Constante C = {C:.2f} (°C)")
-        print(f"\n   Fórmula completa: T(t) = {Tm} + {C:.2f} * e^({K:.6f}*t)")
+    while True:
+        print("\n" + "="*60)
+        print("    OPCIÓN 3: CALCULAR CONSTANTE K")
+        print("="*60)
+        print("\n💡 Esta opción calcula K cuando conoces:")
+        print("   • Temperatura inicial T(0)")
+        print("   • Temperatura ambiente Tm")
+        print("   • Temperatura en un tiempo específico T(t)")
+        print("   • El tiempo t en que se midió")
         
-        # Verificación
-        T_verificacion = calcular_temperatura(Tm, C, K, t)
-        print(f"\n   ✓ Verificación en t={t} min: T = {T_verificacion:.2f}°C")
+        # Mostrar datos actuales si existen
+        if K is not None:
+            print("\n📌 DATOS CALCULADOS:")
+            print(f"   K = {K:.6f} (1/min) | C = {C:.2f} | Tm = {Tm}°C | T(0) = {T0}°C")
         
-        if K < 0:
-            print(f"   📉 K negativa → El objeto se está ENFRIANDO")
-        elif K > 0:
-            print(f"   📈 K positiva → El objeto se está CALENTANDO")
+        print("\n� SUBMENÚ:")
+        print("  a) Calcular K con nuevos datos")
+        print("  b) Calcular temperatura en un tiempo específico")
+        print("  c) Calcular tiempo para alcanzar una temperatura")
+        print("  d) Generar tabla con datos calculados")
+        print("  e) Regresar al menú principal")
+        
+        sub_opcion = input("\n👉 Seleccione una opción (a-e): ").strip().lower()
+        
+        if sub_opcion == "a":
+            print("\n�📝 Ingrese los datos:\n")
+            T0 = solicitar_numero("  Temperatura inicial T(0) (°C): ")
+            Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
+            T_en_t = solicitar_numero("  Temperatura en tiempo t (°C): ")
+            t = solicitar_numero("  Tiempo t en que se midió (minutos): ", valor_minimo=0.0001)
+            
+            K, C = calcular_constante_K(T0, Tm, T_en_t, t)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            if K is None:
+                print("   ❌ No es posible calcular K con estos datos.")
+                print("   Verifica que los datos sean consistentes.")
+            else:
+                print(f"   Constante K = {K:.6f} (1/min)")
+                print(f"   Constante C = {C:.2f} (°C)")
+                print(f"\n   Fórmula completa: T(t) = {Tm} + {C:.2f} * e^({K:.6f}*t)")
+                
+                # Verificación
+                T_verificacion = calcular_temperatura(Tm, C, K, t)
+                print(f"\n   ✓ Verificación en t={t} min: T = {T_verificacion:.2f}°C")
+                
+                if K < 0:
+                    print(f"   📉 K negativa → El objeto se está ENFRIANDO")
+                elif K > 0:
+                    print(f"   📈 K positiva → El objeto se está CALENTANDO")
+                else:
+                    print(f"   ➡️  K = 0 → Temperatura constante")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "b":
+            if K is None:
+                print("\n❌ Primero debe calcular K (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C:.2f}, K={K:.6f}")
+            t = solicitar_numero("  Tiempo t (minutos): ", valor_minimo=0)
+            
+            temperatura = calcular_temperatura(Tm, C, K, t)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            print(f"   Temperatura después de {t} minutos: {temperatura:.2f}°C")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "c":
+            if K is None:
+                print("\n❌ Primero debe calcular K (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C:.2f}, K={K:.6f}")
+            T_objetivo = solicitar_numero("  Temperatura objetivo (°C): ")
+            
+            tiempo = calcular_tiempo_para_temperatura(Tm, C, K, T_objetivo)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            if tiempo is None:
+                print("   ❌ No es posible alcanzar esa temperatura con estos parámetros.")
+            elif tiempo == float('inf'):
+                print("   ⚠️  El objeto nunca alcanzará exactamente esa temperatura.")
+            else:
+                print(f"   Tiempo necesario: {tiempo:.2f} minutos ({tiempo/60:.2f} horas)")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "d":
+            if K is None:
+                print("\n❌ Primero debe calcular K (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C:.2f}, K={K:.6f}")
+            tiempo_total = solicitar_numero("  Tiempo total a simular (minutos): ", valor_minimo=0)
+            intervalo = solicitar_numero("  Intervalo entre mediciones (minutos): ", valor_minimo=0.1)
+            
+            tabla = generar_tabla_enfriamiento(Tm, C, K, tiempo_total, intervalo)
+            
+            print("\n" + "="*60)
+            print(f"📊 TABLA - T = {Tm} + {C:.2f} * e^({K:.6f}*t)")
+            print("="*60)
+            print(f"{'Tiempo (min)':>15} | {'Temperatura (°C)':>20}")
+            print("-"*60)
+            
+            for tiempo, temperatura in tabla:
+                print(f"{tiempo:>15.2f} | {temperatura:>20.2f}")
+            
+            print("="*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "e":
+            break
         else:
-            print(f"   ➡️  K = 0 → Temperatura constante")
-    print("-"*60)
-    
-    input("\nPresione ENTER para continuar...")
+            print("\n❌ Opción inválida. Seleccione a, b, c, d o e.")
+            input("Presione ENTER para continuar...")
 
 
 def opcion_generar_tabla():
     """Maneja la opción 4: Generar tabla de enfriamiento."""
-    print("\n" + "="*60)
-    print("    OPCIÓN 4: TABLA DE ENFRIAMIENTO")
-    print("="*60)
+    # Variables para almacenar datos calculados
+    Tm = None
+    C = None
+    K = None
+    ultima_tabla = None
     
-    print("\n📝 Ingrese los datos:\n")
-    Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
-    C = solicitar_numero("  Constante C: ")
-    K = solicitar_numero("  Constante K: ")
-    tiempo_total = solicitar_numero("  Tiempo total a simular (minutos): ", valor_minimo=0)
-    intervalo = solicitar_numero("  Intervalo entre mediciones (minutos): ", valor_minimo=0.1)
-    
-    tabla = generar_tabla_enfriamiento(Tm, C, K, tiempo_total, intervalo)
-    
-    print("\n" + "="*60)
-    print(f"📊 TABLA DE ENFRIAMIENTO - Fórmula: T = {Tm} + {C} * e^({K}*t)")
-    print("="*60)
-    print(f"{'Tiempo (min)':>15} | {'Temperatura (°C)':>20}")
-    print("-"*60)
-    
-    for tiempo, temperatura in tabla:
-        print(f"{tiempo:>15.2f} | {temperatura:>20.2f}")
-    
-    print("="*60)
-    
-    input("\nPresione ENTER para continuar...")
+    while True:
+        print("\n" + "="*60)
+        print("    OPCIÓN 4: TABLA DE ENFRIAMIENTO")
+        print("="*60)
+        
+        # Mostrar datos actuales si existen
+        if Tm is not None:
+            print("\n📌 DATOS ACTUALES:")
+            print(f"   Tm = {Tm}°C | C = {C} | K = {K}")
+        
+        print("\n📋 SUBMENÚ:")
+        print("  a) Generar tabla con nuevos datos")
+        print("  b) Generar tabla con diferente intervalo/tiempo")
+        print("  c) Calcular temperatura en un tiempo específico")
+        print("  d) Calcular tiempo para alcanzar una temperatura")
+        print("  e) Regresar al menú principal")
+        
+        sub_opcion = input("\n👉 Seleccione una opción (a-e): ").strip().lower()
+        
+        if sub_opcion == "a":
+            print("\n📝 Ingrese los datos:\n")
+            Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
+            C = solicitar_numero("  Constante C: ")
+            K = solicitar_numero("  Constante K: ")
+            tiempo_total = solicitar_numero("  Tiempo total a simular (minutos): ", valor_minimo=0)
+            intervalo = solicitar_numero("  Intervalo entre mediciones (minutos): ", valor_minimo=0.1)
+            
+            ultima_tabla = generar_tabla_enfriamiento(Tm, C, K, tiempo_total, intervalo)
+            
+            print("\n" + "="*60)
+            print(f"📊 TABLA DE ENFRIAMIENTO - Fórmula: T = {Tm} + {C} * e^({K}*t)")
+            print("="*60)
+            print(f"{'Tiempo (min)':>15} | {'Temperatura (°C)':>20}")
+            print("-"*60)
+            
+            for tiempo, temperatura in ultima_tabla:
+                print(f"{tiempo:>15.2f} | {temperatura:>20.2f}")
+            
+            print("="*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "b":
+            if Tm is None:
+                print("\n❌ Primero debe ingresar datos (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C}, K={K}")
+            tiempo_total = solicitar_numero("  Tiempo total a simular (minutos): ", valor_minimo=0)
+            intervalo = solicitar_numero("  Intervalo entre mediciones (minutos): ", valor_minimo=0.1)
+            
+            ultima_tabla = generar_tabla_enfriamiento(Tm, C, K, tiempo_total, intervalo)
+            
+            print("\n" + "="*60)
+            print(f"📊 TABLA DE ENFRIAMIENTO - Fórmula: T = {Tm} + {C} * e^({K}*t)")
+            print("="*60)
+            print(f"{'Tiempo (min)':>15} | {'Temperatura (°C)':>20}")
+            print("-"*60)
+            
+            for tiempo, temperatura in ultima_tabla:
+                print(f"{tiempo:>15.2f} | {temperatura:>20.2f}")
+            
+            print("="*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "c":
+            if Tm is None:
+                print("\n❌ Primero debe ingresar datos (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C}, K={K}")
+            t = solicitar_numero("  Tiempo t (minutos): ", valor_minimo=0)
+            
+            temperatura = calcular_temperatura(Tm, C, K, t)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            print(f"   Temperatura después de {t} minutos: {temperatura:.2f}°C")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "d":
+            if Tm is None:
+                print("\n❌ Primero debe ingresar datos (opción a)")
+                input("Presione ENTER para continuar...")
+                continue
+            
+            print(f"\n📝 Usando: Tm={Tm}°C, C={C}, K={K}")
+            T_objetivo = solicitar_numero("  Temperatura objetivo (°C): ")
+            
+            tiempo = calcular_tiempo_para_temperatura(Tm, C, K, T_objetivo)
+            
+            print("\n" + "-"*60)
+            print("📊 RESULTADO:")
+            if tiempo is None:
+                print("   ❌ No es posible alcanzar esa temperatura con estos parámetros.")
+            elif tiempo == float('inf'):
+                print("   ⚠️  El objeto nunca alcanzará exactamente esa temperatura.")
+            else:
+                print(f"   Tiempo necesario: {tiempo:.2f} minutos ({tiempo/60:.2f} horas)")
+            print("-"*60)
+            input("\nPresione ENTER para continuar...")
+            
+        elif sub_opcion == "e":
+            break
+        else:
+            print("\n❌ Opción inválida. Seleccione a, b, c, d o e.")
+            input("Presione ENTER para continuar...")
 
 
 # =====================================================================
