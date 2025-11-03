@@ -1,5 +1,5 @@
 /* =====================================================================
-   APP.JS - JavaScript para la aplicación web
+   NEWTON.JS - JavaScript para la aplicación de Ley de Enfriamiento de Newton
    ===================================================================== */
 
 // Estado global para mantener datos entre cálculos
@@ -15,65 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTabs();
     initForms();
     initBotonesUsar();
-    initNavegacion();
 });
-
-// =====================================================================
-// NAVEGACIÓN ENTRE PANELES
-// =====================================================================
-
-function initNavegacion() {
-    // Mostrar panel de bienvenida por defecto
-    mostrarPanelBienvenida();
-}
-
-function mostrarPanelBienvenida() {
-    document.getElementById('panel-bienvenida').classList.remove('hidden');
-    document.getElementById('app-newton').classList.add('hidden');
-}
-
-function mostrarAppNewton() {
-    document.getElementById('panel-bienvenida').classList.add('hidden');
-    document.getElementById('app-newton').classList.remove('hidden');
-    // Scroll al inicio
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function seleccionarAplicacion(app) {
-    if (app === 'newton') {
-        mostrarAppNewton();
-    }
-}
-
-function volverInicio() {
-    mostrarPanelBienvenida();
-    // Scroll al inicio
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function mostrarProximamente() {
-    // Crear notificación
-    const notificacion = document.createElement('div');
-    notificacion.className = 'resultado warning';
-    notificacion.style.position = 'fixed';
-    notificacion.style.top = '20px';
-    notificacion.style.right = '20px';
-    notificacion.style.zIndex = '10000';
-    notificacion.style.maxWidth = '400px';
-    notificacion.style.animation = 'slideIn 0.3s ease-out';
-    notificacion.innerHTML = `
-        <h3>🚧 Próximamente</h3>
-        <p>La aplicación de Desintegración Radiactiva estará disponible pronto.</p>
-    `;
-    
-    document.body.appendChild(notificacion);
-    
-    // Eliminar después de 3 segundos
-    setTimeout(() => {
-        notificacion.style.animation = 'slideOut 0.3s ease-out';
-        setTimeout(() => notificacion.remove(), 300);
-    }, 3000);
-}
 
 // =====================================================================
 // SISTEMA DE PESTAÑAS

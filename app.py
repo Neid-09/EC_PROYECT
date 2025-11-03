@@ -24,8 +24,20 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    """Página principal."""
+    """Página principal - Panel de bienvenida."""
     return render_template('index.html')
+
+
+@app.route('/newton')
+def newton():
+    """Página de Ley de Enfriamiento de Newton."""
+    return render_template('newton.html')
+
+
+@app.route('/radiactiva')
+def radiactiva():
+    """Página de Desintegración Radiactiva."""
+    return render_template('radiactiva.html')
 
 
 @app.route('/api/calcular-temperatura', methods=['POST'])

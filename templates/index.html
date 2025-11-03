@@ -3,206 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ley de Enfriamiento de Newton</title>
+    <title>Ecuaciones Diferenciales - Aplicaciones</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>🌡️ Ley de Enfriamiento de Newton</h1>
-            <p class="subtitle">Calculadora interactiva para temperatura y tiempo</p>
-        </header>
+        <!-- Panel de Bienvenida -->
+        <div class="welcome-panel">
+            <header class="header-welcome">
+                <h1>📊 Ecuaciones Diferenciales</h1>
+                <p class="subtitle">Aplicaciones Prácticas</p>
+                <p class="author">Neider Duvan Guindigua Machoa | 2025</p>
+            </header>
 
-        <!-- Fórmula principal -->
-        <div class="formula-box">
-            <h3>📐 Fórmula</h3>
-            <p class="formula">T(t) = T<sub>m</sub> + C · e<sup>K·t</sup></p>
-            <div class="formula-info">
-                <span><strong>T(t):</strong> Temperatura en tiempo t</span>
-                <span><strong>T<sub>m</sub>:</strong> Temperatura ambiente</span>
-                <span><strong>C:</strong> Constante (T₀ - T<sub>m</sub>)</span>
-                <span><strong>K:</strong> Constante de enfriamiento</span>
-                <span><strong>t:</strong> Tiempo transcurrido</span>
-            </div>
-        </div>
+            <div class="welcome-content">
+                <h2>Selecciona una aplicación</h2>
+                <p class="welcome-description">
+                    Explora las diferentes aplicaciones de las ecuaciones diferenciales 
+                    en fenómenos físicos y naturales.
+                </p>
 
-        <!-- Navegación de opciones -->
-        <nav class="nav-tabs">
-            <button class="tab-btn active" data-tab="calcular-temp">
-                🌡️ Calcular Temperatura
-            </button>
-            <button class="tab-btn" data-tab="calcular-tiempo">
-                ⏱️ Calcular Tiempo
-            </button>
-            <button class="tab-btn" data-tab="calcular-k">
-                🔢 Calcular Constante K
-            </button>
-            <button class="tab-btn" data-tab="generar-tabla">
-                📊 Generar Tabla
-            </button>
-            <button class="tab-btn" data-tab="informacion">
-                ℹ️ Información
-            </button>
-        </nav>
+                <div class="applications-grid">
+                    <!-- Ley de Enfriamiento de Newton -->
+                    <a href="/newton" class="application-card active">
+                        <div class="card-icon">🌡️</div>
+                        <h3>Ley de Enfriamiento de Newton</h3>
+                        <p class="card-description">
+                            Calcula la temperatura de un objeto en función del tiempo 
+                            basándose en la Ley de Enfriamiento de Newton.
+                        </p>
+                        <ul class="card-features">
+                            <li>✓ Calcular temperatura en tiempo específico</li>
+                            <li>✓ Determinar tiempo para alcanzar temperatura</li>
+                            <li>✓ Calcular constante de enfriamiento K</li>
+                            <li>✓ Generar tablas y gráficas</li>
+                        </ul>
+                        <div class="card-status available">
+                            <span>✓ Disponible</span>
+                        </div>
+                    </a>
 
-        <!-- Contenido de las pestañas -->
-        <div class="tab-content">
-            
-            <!-- Tab 1: Calcular Temperatura -->
-            <div id="calcular-temp" class="tab-panel active">
-                <h2>Calcular Temperatura en un Tiempo Específico</h2>
-                <form id="form-calcular-temp" class="form">
-                    <div class="form-group">
-                        <label for="temp-Tm">Temperatura ambiente T<sub>m</sub> (°C):</label>
-                        <input type="number" id="temp-Tm" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="temp-C">Constante C:</label>
-                        <input type="number" id="temp-C" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="temp-K">Constante K (negativa para enfriamiento):</label>
-                        <input type="number" id="temp-K" step="0.000001" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="temp-t">Tiempo transcurrido t (minutos):</label>
-                        <input type="number" id="temp-t" step="0.01" min="0" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Calcular</button>
-                </form>
-                <div id="resultado-temp" class="resultado hidden"></div>
-            </div>
-
-            <!-- Tab 2: Calcular Tiempo -->
-            <div id="calcular-tiempo" class="tab-panel">
-                <h2>Calcular Tiempo para Alcanzar una Temperatura</h2>
-                <form id="form-calcular-tiempo" class="form">
-                    <div class="form-group">
-                        <label for="tiempo-Tm">Temperatura ambiente T<sub>m</sub> (°C):</label>
-                        <input type="number" id="tiempo-Tm" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tiempo-C">Constante C:</label>
-                        <input type="number" id="tiempo-C" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tiempo-K">Constante K:</label>
-                        <input type="number" id="tiempo-K" step="0.000001" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tiempo-T-objetivo">Temperatura objetivo (°C):</label>
-                        <input type="number" id="tiempo-T-objetivo" step="0.01" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Calcular</button>
-                </form>
-                <div id="resultado-tiempo" class="resultado hidden"></div>
-            </div>
-
-            <!-- Tab 3: Calcular K -->
-            <div id="calcular-k" class="tab-panel">
-                <h2>Calcular Constante K</h2>
-                <p class="info-text">Esta opción calcula K cuando conoces:</p>
-                <ul class="info-list">
-                    <li>Temperatura inicial T(0)</li>
-                    <li>Temperatura ambiente T<sub>m</sub></li>
-                    <li>Temperatura en un tiempo específico T(t)</li>
-                    <li>El tiempo t en que se midió</li>
-                </ul>
-                <form id="form-calcular-k" class="form">
-                    <div class="form-group">
-                        <label for="k-T0">Temperatura inicial T(0) (°C):</label>
-                        <input type="number" id="k-T0" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="k-Tm">Temperatura ambiente T<sub>m</sub> (°C):</label>
-                        <input type="number" id="k-Tm" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="k-T-en-t">Temperatura en tiempo t (°C):</label>
-                        <input type="number" id="k-T-en-t" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="k-t">Tiempo t en que se midió (minutos):</label>
-                        <input type="number" id="k-t" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Calcular</button>
-                </form>
-                <div id="resultado-k" class="resultado hidden"></div>
-            </div>
-
-            <!-- Tab 4: Generar Tabla -->
-            <div id="generar-tabla" class="tab-panel">
-                <h2>Generar Tabla de Enfriamiento</h2>
-                <form id="form-generar-tabla" class="form">
-                    <div class="form-group">
-                        <label for="tabla-Tm">Temperatura ambiente T<sub>m</sub> (°C):</label>
-                        <input type="number" id="tabla-Tm" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tabla-C">Constante C:</label>
-                        <input type="number" id="tabla-C" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tabla-K">Constante K:</label>
-                        <input type="number" id="tabla-K" step="0.000001" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tabla-tiempo-total">Tiempo total a simular (minutos):</label>
-                        <input type="number" id="tabla-tiempo-total" step="0.01" min="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tabla-intervalo">Intervalo entre mediciones (minutos):</label>
-                        <input type="number" id="tabla-intervalo" step="0.01" min="0.1" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Generar Tabla</button>
-                </form>
-                <div id="resultado-tabla" class="resultado hidden"></div>
-            </div>
-
-            <!-- Tab 5: Información -->
-            <div id="informacion" class="tab-panel">
-                <h2>Información: Ley de Enfriamiento de Newton</h2>
-                <div class="info-section">
-                    <p>
-                        La <strong>Ley de Enfriamiento de Newton</strong> establece que la tasa de cambio
-                        de la temperatura de un objeto es proporcional a la diferencia
-                        entre su temperatura y la temperatura del medio ambiente.
-                    </p>
-                    
-                    <h3>📐 Fórmula</h3>
-                    <p class="formula-large">T(t) = T<sub>m</sub> + C · e<sup>K·t</sup></p>
-                    
-                    <h3>📊 Variables</h3>
-                    <ul>
-                        <li><strong>T(t):</strong> Temperatura en el tiempo t (°C)</li>
-                        <li><strong>T<sub>m</sub>:</strong> Temperatura del medio ambiente (°C)</li>
-                        <li><strong>C:</strong> Constante C (diferencia inicial: T₀ - T<sub>m</sub>)</li>
-                        <li><strong>K:</strong> Constante K (negativa para enfriamiento) (1/min)</li>
-                        <li><strong>t:</strong> Tiempo transcurrido (minutos)</li>
-                    </ul>
-                    
-                    <h3>💡 Valores típicos de K</h3>
-                    <ul>
-                        <li>Agua en aire: <strong>-0.01 a -0.05</strong> (1/min)</li>
-                        <li>Metal pequeño: <strong>-0.05 a -0.15</strong> (1/min)</li>
-                        <li>Café en taza: <strong>-0.08 a -0.12</strong> (1/min)</li>
-                    </ul>
-                    
-                    <h3>💡 Nota</h3>
-                    <ul>
-                        <li>K es <strong>negativo</strong> para enfriamiento</li>
-                        <li>K es <strong>positivo</strong> para calentamiento</li>
-                    </ul>
-                    
-                    <h3>📝 Aplicaciones</h3>
-                    <ul>
-                        <li>Ciencia forense (determinar hora de muerte)</li>
-                        <li>Industria alimentaria (enfriamiento de productos)</li>
-                        <li>Ingeniería térmica</li>
-                        <li>Meteorología</li>
-                    </ul>
+                    <!-- Desintegración Radiactiva -->
+                    <a href="/radiactiva" class="application-card disabled">
+                        <div class="card-icon">☢️</div>
+                        <h3>Desintegración Radiactiva</h3>
+                        <p class="card-description">
+                            Modela el decaimiento de sustancias radiactivas 
+                            y calcula vida media de isótopos.
+                        </p>
+                        <ul class="card-features">
+                            <li>• Calcular cantidad de sustancia restante</li>
+                            <li>• Determinar vida media</li>
+                            <li>• Calcular constante de decaimiento</li>
+                            <li>• Análisis de isótopos</li>
+                        </ul>
+                        <div class="card-status upcoming">
+                            <span>🚧 Próximamente</span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -212,7 +70,5 @@
             <p>Desarrollado por Neider Duvan Guindigua Machoa | 2025</p>
         </footer>
     </div>
-
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

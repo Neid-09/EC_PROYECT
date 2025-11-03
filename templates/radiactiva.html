@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desintegración Radiactiva</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <a href="/" class="btn-back">← Volver al Inicio</a>
+            <h1>☢️ Desintegración Radiactiva</h1>
+            <p class="subtitle">Calculadora para decaimiento de sustancias radiactivas</p>
+        </header>
+
+        <!-- Mensaje de Próximamente -->
+        <div class="coming-soon-container">
+            <div class="coming-soon-card">
+                <div class="coming-soon-icon">🚧</div>
+                <h2>Próximamente</h2>
+                <p class="coming-soon-text">
+                    Esta aplicación está en desarrollo y estará disponible pronto.
+                </p>
+                
+                <div class="formula-box" style="margin-top: 30px;">
+                    <h3>📐 Fórmula de Decaimiento</h3>
+                    <p class="formula">N(t) = N₀ · e<sup>-λt</sup></p>
+                    <div class="formula-info">
+                        <span><strong>N(t):</strong> Cantidad en tiempo t</span>
+                        <span><strong>N₀:</strong> Cantidad inicial</span>
+                        <span><strong>λ:</strong> Constante de decaimiento</span>
+                        <span><strong>t:</strong> Tiempo transcurrido</span>
+                    </div>
+                </div>
+
+                <div class="info-section" style="margin-top: 30px;">
+                    <h3>🔬 Características planeadas</h3>
+                    <ul class="info-list">
+                        <li>Calcular cantidad de sustancia restante en tiempo específico</li>
+                        <li>Determinar vida media de isótopos</li>
+                        <li>Calcular constante de decaimiento λ</li>
+                        <li>Generar tablas y gráficas de decaimiento</li>
+                        <li>Base de datos de isótopos comunes</li>
+                        <li>Conversión entre vida media y constante de decaimiento</li>
+                    </ul>
+                </div>
+
+                <div class="info-section" style="margin-top: 30px;">
+                    <h3>📚 Conceptos importantes</h3>
+                    <div class="info-box">
+                        <p>
+                            <strong>Vida Media (t<sub>1/2</sub>):</strong> Tiempo necesario para que 
+                            la cantidad de una sustancia radiactiva se reduzca a la mitad de su valor inicial.
+                        </p>
+                        <p style="margin-top: 10px;">
+                            <strong>Constante de Decaimiento (λ):</strong> Probabilidad de desintegración 
+                            por unidad de tiempo. Se relaciona con la vida media por: λ = ln(2) / t<sub>1/2</sub>
+                        </p>
+                    </div>
+                </div>
+
+                <a href="/" class="btn btn-primary" style="margin-top: 30px; display: inline-block;">
+                    ← Volver al Inicio
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Desarrollado por Neider Duvan Guindigua Machoa | 2025</p>
+        </footer>
+    </div>
+</body>
+</html>
