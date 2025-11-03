@@ -3,6 +3,7 @@
 
 # Dependencias para la versión web
 Flask==3.0.0
+gunicorn==21.2.0
 
 # Librerías JavaScript (cargadas desde CDN)
 # Chart.js 4.4.0 - Para gráficos interactivos
