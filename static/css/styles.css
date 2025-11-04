@@ -40,6 +40,9 @@
     --glow-primary: 0 0 20px rgba(59, 130, 246, 0.3);
     --glow-secondary: 0 0 20px rgba(6, 182, 212, 0.3);
     --glow-accent: 0 0 20px rgba(139, 92, 246, 0.3);
+    
+    /* Prevenir overscroll que muestra fondo blanco */
+    overscroll-behavior: none;
 }
 
 * {
@@ -48,13 +51,23 @@
     box-sizing: border-box;
 }
 
+html {
+    background-color: #0f172a;
+    min-height: 100%;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    background-color: #0f172a;
     background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
+    width: 100%;
+    position: relative;
 }
 
 /* Container */
@@ -67,7 +80,7 @@ body {
 /* Header */
 .header {
     text-align: center;
-    padding: 40px 20px;
+    padding: 40px 20px 30px;
     background: linear-gradient(135deg, #1e293b 0%, #3b82f6 50%, #06b6d4 100%);
     color: white;
     border-radius: 12px;
@@ -76,6 +89,9 @@ body {
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(59, 130, 246, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .header::before {
@@ -533,12 +549,31 @@ table tbody td {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* Prevenir el fondo blanco en dispositivos móviles */
+    html {
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    body {
+        position: relative;
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
     .header h1 {
         font-size: 1.8rem;
     }
     
     .subtitle {
         font-size: 1rem;
+    }
+    
+    .btn-back {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+        margin-bottom: 15px;
+        align-self: center;
     }
     
     .nav-tabs {
@@ -579,11 +614,18 @@ table tbody td {
     }
     
     .header {
-        padding: 30px 15px;
+        padding: 25px 15px 20px;
     }
     
     .header h1 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+    }
+    
+    .btn-back {
+        font-size: 0.85rem;
+        padding: 7px 14px;
+        margin-bottom: 12px;
+        align-self: center;
     }
     
     .formula {
@@ -902,25 +944,35 @@ table tbody td {
 }
 
 .btn-back {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     padding: 10px 20px;
+    margin-bottom: 20px;
     background: rgba(255, 255, 255, 0.2);
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 8px;
     color: white;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
-    z-index: 10;
+    text-decoration: none;
+    width: fit-content;
+    align-self: flex-start;
+    position: relative;
+    z-index: 2;
+    white-space: nowrap;
 }
 
 .btn-back:hover {
     background: rgba(255, 255, 255, 0.3);
     transform: translateX(-5px);
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive para panel de bienvenida */
