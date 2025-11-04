@@ -1013,3 +1013,43 @@ table tbody td {
     }
 }
 
+/* Secciones de métodos (para ambas aplicaciones) */
+.metodo-section {
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.metodo-section h3 {
+    color: var(--primary-light);
+    margin-bottom: 10px;
+}
+
+.info-text-small {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+    margin: 30px 0;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Form row para botones lado a lado */
+.form-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.form-row .btn {
+    flex: 1;
+    min-width: 120px;
+}
+

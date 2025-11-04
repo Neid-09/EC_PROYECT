@@ -835,7 +835,7 @@ function mostrarModalOpciones(titulo, subtitulo, opciones, callback) {
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.style.cssText = `
-        background: white;
+        background: #1e293b;
         border-radius: 12px;
         padding: 30px;
         max-width: 500px;
@@ -855,13 +855,13 @@ function mostrarModalOpciones(titulo, subtitulo, opciones, callback) {
     });
     
     modal.innerHTML = `
-        <h2 style="margin: 0 0 10px 0; color: #1e293b;">${titulo}</h2>
-        <p style="color: #64748b; margin-bottom: 25px;">${subtitulo}</p>
+        <h2 style="margin: 0 0 10px 0; color: #f1f5f9;">${titulo}</h2>
+        <p style="color: #94a3b8; margin-bottom: 25px;">${subtitulo}</p>
         <div class="modal-options">
             ${botonesHTML}
         </div>
         <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-            <button class="btn" style="background: #94a3b8; color: white;" onclick="cerrarModal(this)">
+            <button class="btn" style="background: #475569; color: white;" onclick="cerrarModal(this)">
                 Cancelar
             </button>
         </div>
