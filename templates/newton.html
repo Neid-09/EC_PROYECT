@@ -40,6 +40,9 @@
             <button class="tab-btn" data-tab="calcular-k">
                 🔢 Calcular Constante K
             </button>
+            <button class="tab-btn" data-tab="calcular-c">
+                📐 Calcular Constante C
+            </button>
             <button class="tab-btn" data-tab="generar-tabla">
                 📊 Generar Tabla
             </button>
@@ -133,7 +136,30 @@
                 <div id="resultado-k" class="resultado hidden"></div>
             </div>
 
-            <!-- Tab 4: Generar Tabla -->
+            <!-- Tab 4: Calcular C -->
+            <div id="calcular-c" class="tab-panel">
+                <h2>Calcular Constante C</h2>
+                <p class="info-text">Esta opción calcula C usando la fórmula:</p>
+                <p class="formula-medium">C = T<sub>inicial</sub> - T<sub>m</sub></p>
+                <ul class="info-list">
+                    <li><strong>T<sub>inicial</sub>:</strong> Temperatura inicial del objeto en t=0</li>
+                    <li><strong>T<sub>m</sub>:</strong> Temperatura del medio ambiente</li>
+                </ul>
+                <form id="form-calcular-c" class="form">
+                    <div class="form-group">
+                        <label for="c-T-inicial">Temperatura inicial T(0) (°C):</label>
+                        <input type="number" id="c-T-inicial" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="c-Tm">Temperatura ambiente T<sub>m</sub> (°C):</label>
+                        <input type="number" id="c-Tm" step="0.01" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Calcular</button>
+                </form>
+                <div id="resultado-c" class="resultado hidden"></div>
+            </div>
+
+            <!-- Tab 5: Generar Tabla -->
             <div id="generar-tabla" class="tab-panel">
                 <h2>Generar Tabla de Enfriamiento</h2>
                 <form id="form-generar-tabla" class="form">
@@ -162,7 +188,7 @@
                 <div id="resultado-tabla" class="resultado hidden"></div>
             </div>
 
-            <!-- Tab 5: Información -->
+            <!-- Tab 6: Información -->
             <div id="informacion" class="tab-panel">
                 <h2>Información: Ley de Enfriamiento de Newton</h2>
                 <div class="info-section">

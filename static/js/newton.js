@@ -90,6 +90,18 @@ function initForms() {
         await calcularK(data);
     });
     
+    // Formulario: Calcular C
+    document.getElementById('form-calcular-c').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const data = {
+            T_inicial: parseFloat(document.getElementById('c-T-inicial').value),
+            Tm: parseFloat(document.getElementById('c-Tm').value)
+        };
+        
+        await calcularC(data);
+    });
+    
     // Formulario: Generar Tabla
     document.getElementById('form-generar-tabla').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -259,6 +271,83 @@ async function calcularK(data) {
     }
 }
 
+// Función: Calcular C
+async function calcularC(data) {
+    const resultadoDiv = document.getElementById('resultado-c');
+    const submitBtn = document.querySelector('#form-calcular-c button[type="submit"]');
+    
+    try {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Calculando... <span class="loading"></span>';
+        
+        const response = await fetch('/api/calcular-c', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.exito) {
+            let iconoInterpretacion = '';
+            let colorCaja = '';
+            let borderColor = '';
+            
+            if (result.interpretacion.tipo === 'positivo') {
+                iconoInterpretacion = '🔥';
+                colorCaja = 'rgba(239, 68, 68, 0.15)'; // Rojo con transparencia
+                borderColor = '#ef4444';
+            } else if (result.interpretacion.tipo === 'negativo') {
+                iconoInterpretacion = '❄️';
+                colorCaja = 'rgba(6, 182, 212, 0.15)'; // Cyan con transparencia
+                borderColor = '#06b6d4';
+            } else {
+                iconoInterpretacion = '⚖️';
+                colorCaja = 'rgba(148, 163, 184, 0.15)'; // Gris con transparencia
+                borderColor = '#94a3b8';
+            }
+            
+            resultadoDiv.className = 'resultado success';
+            resultadoDiv.innerHTML = `
+                <h3>✅ Resultado</h3>
+                <p class="formula-resultado">${result.formula}</p>
+                <p><strong>Constante C:</strong> <span class="resultado-valor">${result.C}</span></p>
+                
+                <div style="background: ${colorCaja}; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid ${borderColor}; border: 1px solid ${borderColor};">
+                    <h4 style="margin: 0 0 10px 0; color: #f1f5f9; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1.5em;">${iconoInterpretacion}</span>
+                        <span>Interpretación</span>
+                    </h4>
+                    <p style="margin: 8px 0; color: #cbd5e1; line-height: 1.6;"><strong style="color: #f1f5f9;">Situación:</strong> ${result.interpretacion.descripcion}</p>
+                    <p style="margin: 8px 0; color: #cbd5e1; line-height: 1.6;"><strong style="color: #f1f5f9;">Comportamiento:</strong> ${result.interpretacion.comportamiento}</p>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 12px; background: rgba(30, 41, 59, 0.5); border-radius: 6px; border: 1px solid #334155;">
+                    <p style="margin: 5px 0; font-size: 0.9em; color: #cbd5e1;">
+                        <strong style="color: #f1f5f9;">Valores usados:</strong><br>
+                        <span style="color: #94a3b8;">T<sub>inicial</sub> = ${result.T_inicial}°C | 
+                        T<sub>m</sub> = ${result.Tm}°C</span>
+                    </p>
+                </div>
+                
+                <button onclick="usarValorC(${result.C}, ${result.Tm})" class="btn btn-secondary" style="margin-top: 10px;">
+                    📋 Usar este valor de C en otro cálculo
+                </button>
+            `;
+        } else {
+            mostrarError(resultadoDiv, result.error);
+        }
+    } catch (error) {
+        mostrarError(resultadoDiv, 'Error de conexión con el servidor');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Calcular';
+        resultadoDiv.classList.remove('hidden');
+    }
+}
+
 // Función: Generar Tabla
 async function generarTabla(data) {
     const resultadoDiv = document.getElementById('resultado-tabla');
@@ -298,15 +387,15 @@ async function generarTabla(data) {
             let tablaHTML = `
                 <h3>📊 Tabla y Gráfico de ${tipoProceso}</h3>
                 
-                <div class="info-box" style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="margin: 0 0 10px 0; color: #1e293b;">📋 Datos del Proceso</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-                        <div><strong>Temperatura inicial (T₀):</strong> ${T0.toFixed(2)}°C</div>
-                        <div><strong>Temperatura ambiente (Tₘ):</strong> ${result.Tm}°C</div>
-                        <div><strong>Constante C:</strong> ${result.C}</div>
-                        <div><strong>Constante K:</strong> ${result.K} (1/min)</div>
-                        <div><strong>Tipo de proceso:</strong> ${iconoProceso} ${tipoProceso}</div>
-                        <div><strong>Puntos de datos:</strong> ${result.num_puntos}</div>
+                <div class="info-box" style="background: rgba(30, 41, 59, 0.6); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #334155;">
+                    <h4 style="margin: 0 0 10px 0; color: #f1f5f9;">📋 Datos del Proceso</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; color: #cbd5e1;">
+                        <div><strong style="color: #f1f5f9;">Temperatura inicial (T₀):</strong> ${T0.toFixed(2)}°C</div>
+                        <div><strong style="color: #f1f5f9;">Temperatura ambiente (Tₘ):</strong> ${result.Tm}°C</div>
+                        <div><strong style="color: #f1f5f9;">Constante C:</strong> ${result.C}</div>
+                        <div><strong style="color: #f1f5f9;">Constante K:</strong> ${result.K} (1/min)</div>
+                        <div><strong style="color: #f1f5f9;">Tipo de proceso:</strong> ${iconoProceso} ${tipoProceso}</div>
+                        <div><strong style="color: #f1f5f9;">Puntos de datos:</strong> ${result.num_puntos}</div>
                     </div>
                 </div>
                 
@@ -684,6 +773,37 @@ function usarValoresTiempo() {
                 document.getElementById('tabla-Tm').value = estadoGlobal.tiempo.Tm;
                 document.getElementById('tabla-C').value = estadoGlobal.tiempo.C;
                 document.getElementById('tabla-K').value = estadoGlobal.tiempo.K;
+                cambiarTab('generar-tabla');
+                mostrarNotificacion('✅ Valores copiados a "Generar Tabla"');
+            }
+        }
+    );
+}
+
+// Función para usar valor de C en otras pestañas
+function usarValorC(C, Tm) {
+    mostrarModalOpciones(
+        '¿Dónde quieres usar este valor de C?',
+        `C = ${C}, Tm = ${Tm}°C`,
+        [
+            { texto: '🌡️ Calcular Temperatura', valor: 'temp' },
+            { texto: '⏱️ Calcular Tiempo', valor: 'tiempo' },
+            { texto: '📊 Generar Tabla', valor: 'tabla' }
+        ],
+        (opcion) => {
+            if (opcion === 'temp') {
+                document.getElementById('temp-Tm').value = Tm;
+                document.getElementById('temp-C').value = C;
+                cambiarTab('calcular-temp');
+                mostrarNotificacion('✅ Valores copiados a "Calcular Temperatura"');
+            } else if (opcion === 'tiempo') {
+                document.getElementById('tiempo-Tm').value = Tm;
+                document.getElementById('tiempo-C').value = C;
+                cambiarTab('calcular-tiempo');
+                mostrarNotificacion('✅ Valores copiados a "Calcular Tiempo"');
+            } else if (opcion === 'tabla') {
+                document.getElementById('tabla-Tm').value = Tm;
+                document.getElementById('tabla-C').value = C;
                 cambiarTab('generar-tabla');
                 mostrarNotificacion('✅ Valores copiados a "Generar Tabla"');
             }

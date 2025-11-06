@@ -16,6 +16,7 @@ from newton_cooling.core.calculations import (
     calcular_temperatura,
     calcular_tiempo_para_temperatura,
     calcular_constante_K,
+    calcular_constante_C,
     generar_tabla_enfriamiento
 )
 from desintegracion_radiactiva.core.calculations import (
@@ -187,6 +188,61 @@ def api_calcular_k():
             't_verificacion': t,
             'tipo_proceso': tipo_proceso,
             'formula': f"T(t) = {Tm} + {round(C, 2)} * e^({round(K, 6)}*t)"
+        })
+    except (KeyError, ValueError, TypeError):
+        return jsonify({
+            'exito': False,
+            'error': 'Datos inválidos. Por favor verifica los valores ingresados.'
+        }), 400
+    except Exception as e:
+        return jsonify({
+            'exito': False,
+            'error': f'Error en el cálculo: {str(e)}'
+        }), 500
+
+
+@app.route('/api/calcular-c', methods=['POST'])
+def api_calcular_c():
+    """
+    Endpoint para calcular constante C.
+    
+    Espera: {T_inicial, Tm}
+    Retorna: {C, interpretacion, exito}
+    """
+    try:
+        data = request.get_json()
+        T_inicial = float(data['T_inicial'])
+        Tm = float(data['Tm'])
+        
+        C = calcular_constante_C(T_inicial, Tm)
+        
+        # Interpretación del resultado
+        if C > 0:
+            interpretacion = {
+                'tipo': 'positivo',
+                'descripcion': 'El objeto está más caliente que el ambiente',
+                'comportamiento': 'Con K negativo, el objeto se enfriará hacia Tm'
+            }
+        elif C < 0:
+            interpretacion = {
+                'tipo': 'negativo',
+                'descripcion': 'El objeto está más frío que el ambiente',
+                'comportamiento': 'Con K positivo, el objeto se calentará hacia Tm'
+            }
+        else:
+            interpretacion = {
+                'tipo': 'cero',
+                'descripcion': 'El objeto ya está a la temperatura ambiente',
+                'comportamiento': 'La temperatura no cambiará con el tiempo'
+            }
+        
+        return jsonify({
+            'exito': True,
+            'C': round(C, 2),
+            'T_inicial': T_inicial,
+            'Tm': Tm,
+            'interpretacion': interpretacion,
+            'formula': f"C = {T_inicial} - {Tm} = {round(C, 2)}"
         })
     except (KeyError, ValueError, TypeError):
         return jsonify({

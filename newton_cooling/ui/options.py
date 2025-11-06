@@ -10,6 +10,7 @@ from ..core.calculations import (
     calcular_temperatura,
     calcular_tiempo_para_temperatura,
     calcular_constante_K,
+    calcular_constante_C,
     generar_tabla_enfriamiento
 )
 from ..utils.validators import solicitar_numero
@@ -57,7 +58,21 @@ def opcion_calcular_temperatura():
         if sub_opcion == "a":
             print("\n📝 Ingrese los datos:\n")
             Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
-            C = solicitar_numero("  Constante C: ")
+            
+            # Preguntar si desea calcular C automáticamente
+            print("\n¿Cómo desea ingresar la constante C?")
+            print("  1. Ingresar C directamente")
+            print("  2. Calcular C automáticamente (C = T_inicial - Tm)")
+            
+            opcion_c = input("Seleccione (1 o 2): ").strip()
+            
+            if opcion_c == "2":
+                T_inicial = solicitar_numero("  Temperatura inicial T(0) (°C): ")
+                C = calcular_constante_C(T_inicial, Tm)
+                print(f"\n✅ C calculado: C = {T_inicial} - {Tm} = {C:.2f}")
+            else:
+                C = solicitar_numero("  Constante C: ")
+            
             K = solicitar_numero("  Constante K (negativa para enfriamiento): ")
             ultimo_tiempo = solicitar_numero("  Tiempo transcurrido t (minutos): ", valor_minimo=0)
             
@@ -135,7 +150,21 @@ def opcion_calcular_tiempo():
         if sub_opcion == "a":
             print("\n📝 Ingrese los datos:\n")
             Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
-            C = solicitar_numero("  Constante C: ")
+            
+            # Preguntar si desea calcular C automáticamente
+            print("\n¿Cómo desea ingresar la constante C?")
+            print("  1. Ingresar C directamente")
+            print("  2. Calcular C automáticamente (C = T_inicial - Tm)")
+            
+            opcion_c = input("Seleccione (1 o 2): ").strip()
+            
+            if opcion_c == "2":
+                T_inicial = solicitar_numero("  Temperatura inicial T(0) (°C): ")
+                C = calcular_constante_C(T_inicial, Tm)
+                print(f"\n✅ C calculado: C = {T_inicial} - {Tm} = {C:.2f}")
+            else:
+                C = solicitar_numero("  Constante C: ")
+            
             K = solicitar_numero("  Constante K: ")
             ultima_temp_objetivo = solicitar_numero("  Temperatura objetivo (°C): ")
             
@@ -287,6 +316,54 @@ def opcion_calcular_constante_K():
             input("Presione ENTER para continuar...")
 
 
+def opcion_calcular_constante_C():
+    """Maneja la opción 4: Calcular constante C."""
+    while True:
+        mostrar_cabecera("OPCIÓN 4: CALCULAR CONSTANTE C")
+        print("\n💡 Esta opción calcula C usando la fórmula:")
+        print("   C = T_inicial - Tm")
+        print("\n   Donde:")
+        print("   • T_inicial: Temperatura inicial del objeto en t=0")
+        print("   • Tm: Temperatura del medio ambiente")
+        
+        print("\n📝 Ingrese los datos:\n")
+        T_inicial = solicitar_numero("  Temperatura inicial T(0) (°C): ")
+        Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
+        
+        C = calcular_constante_C(T_inicial, Tm)
+        
+        print("\n" + "─" * 60)
+        print("✅ RESULTADO:")
+        print("─" * 60)
+        print(f"\n  C = T_inicial - Tm")
+        print(f"  C = {T_inicial} - {Tm}")
+        print(f"  C = {C:.2f}")
+        print("\n" + "─" * 60)
+        
+        # Interpretación del resultado
+        if C > 0:
+            print("\n📊 Interpretación:")
+            print(f"  • C es positivo ({C:.2f})")
+            print("  • El objeto está más caliente que el ambiente")
+            print("  • Con K negativo, el objeto se enfriará hacia Tm")
+        elif C < 0:
+            print("\n📊 Interpretación:")
+            print(f"  • C es negativo ({C:.2f})")
+            print("  • El objeto está más frío que el ambiente")
+            print("  • Con K positivo, el objeto se calentará hacia Tm")
+        else:
+            print("\n📊 Interpretación:")
+            print("  • C es cero")
+            print("  • El objeto ya está a la temperatura ambiente")
+            print("  • La temperatura no cambiará con el tiempo")
+        
+        print("\n¿Desea hacer otro cálculo de C?")
+        respuesta = input("(s/n): ").strip().lower()
+        if respuesta != 's':
+            break
+        print()
+
+
 def opcion_generar_tabla():
     """Maneja la opción 4: Generar tabla de enfriamiento."""
     # Variables para almacenar datos calculados
@@ -317,7 +394,21 @@ def opcion_generar_tabla():
         if sub_opcion == "a":
             print("\n📝 Ingrese los datos:\n")
             Tm = solicitar_numero("  Temperatura ambiente Tm (°C): ")
-            C = solicitar_numero("  Constante C: ")
+            
+            # Preguntar si desea calcular C automáticamente
+            print("\n¿Cómo desea ingresar la constante C?")
+            print("  1. Ingresar C directamente")
+            print("  2. Calcular C automáticamente (C = T_inicial - Tm)")
+            
+            opcion_c = input("Seleccione (1 o 2): ").strip()
+            
+            if opcion_c == "2":
+                T_inicial = solicitar_numero("  Temperatura inicial T(0) (°C): ")
+                C = calcular_constante_C(T_inicial, Tm)
+                print(f"\n✅ C calculado: C = {T_inicial} - {Tm} = {C:.2f}")
+            else:
+                C = solicitar_numero("  Constante C: ")
+            
             K = solicitar_numero("  Constante K: ")
             tiempo_total = solicitar_numero("  Tiempo total a simular (minutos): ", valor_minimo=0)
             intervalo = solicitar_numero("  Intervalo entre mediciones (minutos): ", valor_minimo=0.1)

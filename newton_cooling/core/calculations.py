@@ -106,6 +106,21 @@ def calcular_constante_K(T0, Tm, T_en_t, t):
         return None, None
 
 
+def calcular_constante_C(T_inicial, Tm):
+    """
+    Calcula la constante C usando la fórmula: C = T - Tm
+    
+    Parámetros:
+        T_inicial (float): Temperatura inicial del objeto en t=0 (°C)
+        Tm (float): Temperatura del medio ambiente (°C)
+    
+    Retorna:
+        float: Valor de la constante C
+    """
+    C = T_inicial - Tm
+    return C
+
+
 def generar_tabla_enfriamiento(Tm, C, K, tiempo_total, intervalo):
     """
     Genera una tabla con la evolución de la temperatura en el tiempo.

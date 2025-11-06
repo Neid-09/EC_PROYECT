@@ -13,6 +13,7 @@ from .options import (
     opcion_calcular_temperatura,
     opcion_calcular_tiempo,
     opcion_calcular_constante_K,
+    opcion_calcular_constante_C,
     opcion_generar_tabla
 )
 
@@ -26,9 +27,10 @@ def mostrar_menu_principal():
     print("  1. Calcular temperatura en un tiempo específico")
     print("  2. Calcular tiempo para alcanzar una temperatura")
     print("  3. Calcular constante K (con datos conocidos)")
-    print("  4. Generar tabla de enfriamiento")
-    print("  5. Ver información sobre la ley")
-    print("  6. Salir")
+    print("  4. Calcular constante C (C = T_inicial - Tm)")
+    print("  5. Generar tabla de enfriamiento")
+    print("  6. Ver información sobre la ley")
+    print("  7. Salir")
     print("\n" + SUBSEPARATOR_CHAR * LINE_WIDTH)
 
 
@@ -41,7 +43,7 @@ def ejecutar_aplicacion():
         limpiar_pantalla()
         mostrar_menu_principal()
         
-        opcion = input("\n👉 Seleccione una opción (1-6): ").strip()
+        opcion = input("\n👉 Seleccione una opción (1-7): ").strip()
         
         if opcion == "1":
             opcion_calcular_temperatura()
@@ -50,13 +52,15 @@ def ejecutar_aplicacion():
         elif opcion == "3":
             opcion_calcular_constante_K()
         elif opcion == "4":
-            opcion_generar_tabla()
+            opcion_calcular_constante_C()
         elif opcion == "5":
-            mostrar_informacion()
+            opcion_generar_tabla()
         elif opcion == "6":
+            mostrar_informacion()
+        elif opcion == "7":
             print("\n👋 ¡Gracias por usar la aplicación!")
             print(SEPARATOR_CHAR * LINE_WIDTH)
             break
         else:
-            print("\n❌ Opción inválida. Por favor seleccione una opción del 1 al 6.")
+            print("\n❌ Opción inválida. Por favor seleccione una opción del 1 al 7.")
             input("Presione ENTER para continuar...")
